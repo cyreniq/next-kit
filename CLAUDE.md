@@ -22,6 +22,8 @@ Minimal Next.js starter kit for building landing pages. This is a template repo 
 - `npm run format` — Prettier formatting
 - `npm run format:check` — Check formatting
 
+No test framework is configured — there is no `test` script and no test runner installed.
+
 ## Architecture
 
 - **App Router** — Pages and layouts in `src/app/`
