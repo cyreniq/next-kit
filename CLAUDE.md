@@ -55,7 +55,9 @@ VS Code workspace config in `.vscode/`: recommended extensions (ESLint, Prettier
 
 ## Dependency Notes
 
-- **`overrides`** — `package.json` pins two transitive deps for security fixes:
+- **`overrides`** — `package.json` pins four transitive deps for security fixes:
+  - `@babel/core@^7.29.7` — fixes arbitrary file read via sourceMappingURL (GHSA-4x5r-pxfx-6jf8) pulled in via `eslint-plugin-react-hooks`. Keep until `eslint-config-next` updates its dependency tree.
+  - `js-yaml@^4.2.0` — fixes quadratic-complexity DoS in merge key handling (GHSA-h67p-54hq-rp68) pulled in via `@eslint/eslintrc`. Keep until ESLint updates its dependency tree.
   - `minimatch@^10` — fixes security advisories in transitive ESLint dependencies. Keep until `eslint-config-next` updates its dependency tree.
   - `postcss@^8.5.10` — fixes CVE in postcss pulled in by both Next.js and `@tailwindcss/postcss`. Keep until both upstreams ship 8.5.10+.
 - **`engines`** — Kit declares `node >=22.0.0` (Node 22 LTS). `@types/node` is pinned to `^22` to match.
@@ -72,5 +74,5 @@ When cloning this kit for a new project, update the following:
 6. **Theming** — Update `--background` and `--foreground` CSS variables in `globals.css`
 7. **Metadata** — Add favicon, og-image, and other assets to `public/`
 8. **Security** — Update `security.txt` contact, expiry, and `Canonical:` URL; adjust CSP in `next.config.ts` if needed; remove `X-Robots-Tag` header, `robots.txt` disallow, and `robots` metadata when ready to launch
-9. **Environment** — Create `.env.local` from `.env.example` if needed
+9. **Environment** — Copy `.env.example` to `.env.local` and fill in values if needed
 10. **`.gitkeep` files** — Remove from any folder once it has actual content
