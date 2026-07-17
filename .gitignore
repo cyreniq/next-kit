@@ -6,6 +6,9 @@ node_modules/
 out/
 next-env.d.ts
 
+# Testing
+coverage/
+
 # Environment
 .env
 .env*.local
@@ -13,6 +16,9 @@ next-env.d.ts
 
 # TypeScript
 *.tsbuildinfo
+
+# Logs
+npm-debug.log*
 
 # Misc
 .claude/

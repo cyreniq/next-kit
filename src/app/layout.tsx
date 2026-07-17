@@ -1,28 +1,16 @@
 import type { Metadata } from "next";
-import localFont from "next/font/local";
+import { Inter } from "next/font/google";
 import "./globals.css";
 
-const geist = localFont({
-  src: [
-    { path: "../fonts/Geist[wght].woff2", style: "normal" },
-    { path: "../fonts/Geist-Italic[wght].woff2", style: "italic" },
-  ],
-  display: "block",
-  variable: "--font-geist",
-});
-
-const geistMono = localFont({
-  src: [
-    { path: "../fonts/GeistMono[wght].woff2", style: "normal" },
-    { path: "../fonts/GeistMono-Italic[wght].woff2", style: "italic" },
-  ],
-  display: "block",
-  variable: "--font-geist-mono",
+const inter = Inter({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-inter",
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("http://localhost:3000"),
-  title: "marner-next-kit",
+  metadataBase: new URL("https://example.com"),
+  title: "next-kit",
   robots: {
     index: false,
     follow: false,
@@ -40,7 +28,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${geist.variable} ${geistMono.variable} antialiased`}>
+      <body className={`${inter.variable} antialiased`}>
         <main>{children}</main>
       </body>
     </html>

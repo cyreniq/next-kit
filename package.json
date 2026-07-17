@@ -1,5 +1,5 @@
 {
-  "name": "marner-next-kit",
+  "name": "next-kit",
   "private": true,
   "engines": {
     "node": ">=22.0.0"
