@@ -32,8 +32,13 @@
   },
   "overrides": {
     "@babel/core": "^7.29.7",
-    "js-yaml": "^4.2.0",
+    "js-yaml": "^4.2.1",
     "minimatch": "^10.2.4",
-    "postcss": "^8.5.10"
+    "postcss": "^8.5.10",
+    "sharp": "^0.35.3"
+  },
+  "allowScripts": {
+    "sharp@0.35.3": true,
+    "unrs-resolver@1.11.1": true
   }
 }
