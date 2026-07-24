@@ -19,9 +19,13 @@ coverage/
 # Logs
 npm-debug.log*
 
-# Misc
+# Vercel
+.vercel/
+
+# Tooling
 .claude/
 .playwright-mcp/
 .superpowers/
+
+# OS
 .DS_Store
-.vercel

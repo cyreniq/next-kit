@@ -9,7 +9,10 @@ coverage/
 # Lockfile
 package-lock.json
 
-# Misc
+# Vercel
+.vercel/
+
+# Tooling
 .claude/
 .playwright-mcp/
 .superpowers/
