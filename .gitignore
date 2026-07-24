@@ -10,8 +10,7 @@ next-env.d.ts
 coverage/
 
 # Environment
-.env
-.env*.local
+.env*
 !.env.example
 
 # TypeScript
@@ -22,4 +21,7 @@ npm-debug.log*
 
 # Misc
 .claude/
+.playwright-mcp/
+.superpowers/
 .DS_Store
+.vercel

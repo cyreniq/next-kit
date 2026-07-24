@@ -46,6 +46,13 @@ No test framework is configured — there is no `test` script and no test runner
 - **`poweredByHeader: false`** — Next.js framework identification disabled
 - **`security.txt`** — Vulnerability reporting contact at `public/.well-known/security.txt`. Update the `Contact`, `Canonical`, and `Expires` fields per project; renew `Expires` before it lapses (RFC 9116) or reporters' tooling treats the file as stale.
 
+## Automation
+
+The kit has no push-triggered CI (local checks plus the deploy build cover that); automation exists to watch the repo while it sits idle between projects:
+
+- **Dependabot, security-only** — `.github/dependabot.yml` sets `open-pull-requests-limit: 0`, which disables version-update PRs; only security updates open PRs. Requires "Dependabot alerts" and "Dependabot security updates" enabled in the GitHub repo settings (`gh api -X PUT repos/<owner>/<repo>/vulnerability-alerts` and `.../automated-security-fixes`) — the yml alone does nothing without them.
+- **Weekly audit** — `.github/workflows/audit.yml` runs `npm audit` Mondays 06:00 UTC (and via manual dispatch). It fails on advisories of _any_ severity, matching the kit's practice of fixing even moderate ones, and catches transitive advisories that Dependabot can't cleanly PR (the `overrides` cases). It runs against the lockfile only — no `npm ci`, so install scripts never run in CI.
+
 ## Environment Variables
 
 - **`DEV_ORIGIN`** — Optional. Set in `.env.local` to allow a custom dev origin (e.g., a tunneled URL) via `allowedDevOrigins` in `next.config.ts`
@@ -81,3 +88,4 @@ When cloning this kit for a new project, update the following:
 8. **Security** — Update `security.txt` contact, expiry, and `Canonical:` URL; adjust CSP in `next.config.ts` if needed; remove `X-Robots-Tag` header, `robots.txt` disallow, and `robots` metadata when ready to launch
 9. **Environment** — Copy `.env.example` to `.env.local` and fill in values if needed
 10. **`.gitkeep` files** — Remove from any folder once it has actual content
+11. **Dependabot** — Enable "Dependabot alerts" and "Dependabot security updates" on the new GitHub repo (see Automation section); the checked-in `dependabot.yml` and audit workflow do the rest

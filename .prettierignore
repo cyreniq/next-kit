@@ -1,9 +1,15 @@
 # Next.js
 .next/
 out/
+next-env.d.ts
 
 # Testing
 coverage/
 
 # Lockfile
 package-lock.json
+
+# Misc
+.claude/
+.playwright-mcp/
+.superpowers/

@@ -88,6 +88,11 @@ Content Security Policy, COOP/CORP/COEP, and a locked-down Permissions-Policy â€
 `robots` metadata, and the `X-Robots-Tag` header; remove all three before launch. See
 the Security section of `CLAUDE.md` for the details and trade-offs.
 
+Dependency advisories are watched automatically: Dependabot opens security-only PRs
+(version-update PRs are disabled) and a weekly GitHub Actions job runs `npm audit`
+against the lockfile. Both require Dependabot alerts/security updates to be enabled
+in the repo settings â€” see the Automation section of `CLAUDE.md`.
+
 ## Editor
 
 VS Code workspace config lives in `.vscode/`: recommended extensions (ESLint, Prettier,

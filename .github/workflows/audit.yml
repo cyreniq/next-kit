@@ -1,0 +1,22 @@
+name: Audit
+
+on:
+  schedule:
+    # Mondays 06:00 UTC — watches the repo while it sits idle between projects
+    - cron: "0 6 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      # npm audit only needs the lockfile — skipping `npm ci` keeps the job
+      # fast and avoids running install scripts in CI.
+      - run: npm audit
