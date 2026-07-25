@@ -65,11 +65,12 @@ VS Code workspace config in `.vscode/`: recommended extensions (ESLint, Prettier
 
 ## Dependency Notes
 
-- **`overrides`** — `package.json` pins five transitive deps for security fixes:
+- **`overrides`** — `package.json` pins six transitive deps for security fixes:
   - `@babel/core@^7.29.7` — fixes arbitrary file read via sourceMappingURL (GHSA-4x5r-pxfx-6jf8) pulled in via `eslint-plugin-react-hooks`. Keep until `eslint-config-next` updates its dependency tree.
+  - `brace-expansion@^5.0.8` — fixes DoS via unbounded expansion length causing an OOM crash (GHSA-mh99-v99m-4gvg) pulled in via `minimatch` (itself an override, below). Keep until the ESLint/minimatch dependency tree ships `brace-expansion@5.0.8+`.
   - `js-yaml@^4.2.1` — fixes quadratic-complexity DoS in merge-key handling (GHSA-h67p-54hq-rp68, and GHSA-52cp-r559-cp3m which covered up to 4.2.0) pulled in via `@eslint/eslintrc`. Keep until ESLint updates its dependency tree.
   - `minimatch@^10` — fixes security advisories in transitive ESLint dependencies. Keep until `eslint-config-next` updates its dependency tree. Forces a semver-major jump (ESLint-family packages declare `^3.1.x`) — if ESLint glob/ignore matching misbehaves, suspect this first.
-  - `postcss@^8.5.10` — fixes CVE in postcss pulled in by both Next.js and `@tailwindcss/postcss`. Keep until both upstreams ship 8.5.10+.
+  - `postcss@^8.5.18` — fixes path traversal in source-map auto-loading leading to arbitrary `.map` file disclosure (GHSA-r28c-9q8g-f849, fixed in 8.5.18; earlier floor 8.5.10 covered a prior CVE) in postcss pulled in by both Next.js and `@tailwindcss/postcss`. Keep until both upstreams ship 8.5.18+.
   - `sharp@^0.35.3` — fixes inherited libvips CVEs (GHSA-f88m-g3jw-g9cj); Next 16 declares `^0.34.5` as an optional dep. A 0.x minor jump over Next's declared range — if `next/image` optimization misbehaves, suspect this first. Keep until Next bumps its sharp range.
 - **`allowScripts`** — `package.json` records reviewed install scripts per npm's `approve-scripts` feature: `sharp` (prebuilt-binary check) and `unrs-resolver` (napi postinstall check), both pinned to the installed version. When either package's version changes, `npm install` warns again — review and re-run `npm approve-scripts <pkg>` to update the pin.
 - **`engines`** — Kit declares `node >=22.0.0` (Node 22 LTS). `@types/node` is pinned to `^22` to match.
