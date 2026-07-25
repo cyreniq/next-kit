@@ -94,12 +94,6 @@ CSP allows them, unless they ship the right CORP/CORS headers. It's a secure def
 it's the first header to relax when you legitimately need an external resource; see the
 COEP note in `CLAUDE.md`.
 
-## Editor
-
-VS Code workspace config lives in `.vscode/`: recommended extensions (ESLint, Prettier,
-Tailwind CSS IntelliSense) and settings for format-on-save with Prettier and ESLint
-auto-fix.
-
 ## Setting Up a New Project
 
 See `CLAUDE.md` for a step-by-step checklist of what to update when starting a new

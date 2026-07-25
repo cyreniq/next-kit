@@ -50,9 +50,7 @@ No test framework is configured — there is no `test` script and no test runner
 
 - **`DEV_ORIGIN`** — Optional. Set in `.env.local` to allow a custom dev origin (e.g., a tunneled URL) via `allowedDevOrigins` in `next.config.ts`
 
-## Editor
-
-VS Code workspace config in `.vscode/`: recommended extensions (ESLint, Prettier, Tailwind CSS IntelliSense) and settings that suppress unknown `@` rule warnings from Tailwind CSS 4 syntax, enable format-on-save, pin Prettier as the default formatter, and auto-apply ESLint fixes on save (`source.fixAll.eslint`).
+## Local Tooling
 
 `.claude/` is gitignored — project-level Claude Code settings, permissions, or skills placed there stay local to this machine. Remove the `.gitignore` entry first if that config should be committed and shared.
 
