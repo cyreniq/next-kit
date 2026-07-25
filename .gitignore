@@ -26,6 +26,8 @@ npm-debug.log*
 .claude/
 .playwright-mcp/
 .superpowers/
+.agents/
+skills-lock.json
 
 # OS
 .DS_Store
