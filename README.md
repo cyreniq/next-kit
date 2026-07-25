@@ -14,7 +14,7 @@ A minimal Next.js starter kit for building landing pages — hardened, typed, an
 
 ## Getting Started
 
-Requires **Node.js 22+**.
+Requires **Node.js 24** (pinned via `engines` and `.nvmrc` — run `nvm use`).
 
 ```bash
 npm install
@@ -88,10 +88,11 @@ Content Security Policy, COOP/CORP/COEP, and a locked-down Permissions-Policy �
 `robots` metadata, and the `X-Robots-Tag` header; remove all three before launch. See
 the Security section of `CLAUDE.md` for the details and trade-offs.
 
-Dependency advisories are watched automatically: Dependabot opens security-only PRs
-(version-update PRs are disabled) and a weekly GitHub Actions job runs `npm audit`
-against the lockfile. Both require Dependabot alerts/security updates to be enabled
-in the repo settings — see the Automation section of `CLAUDE.md`.
+Note that `Cross-Origin-Embedder-Policy: require-corp` is deliberately strict — it blocks
+most cross-origin resources (third-party embeds, images, iframes, scripts) even when the
+CSP allows them, unless they ship the right CORP/CORS headers. It's a secure default, but
+it's the first header to relax when you legitimately need an external resource; see the
+COEP note in `CLAUDE.md`.
 
 ## Editor
 

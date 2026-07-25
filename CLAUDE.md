@@ -42,16 +42,9 @@ No test framework is configured — there is no `test` script and no test runner
 - **No indexing** — Crawling/indexing blocked via `robots.txt`, `robots` metadata in `layout.tsx`, and `X-Robots-Tag` header in `next.config.ts` (remove before launch)
 - **Security headers** — Comprehensive HTTP security headers in `next.config.ts`: HSTS, CSP, COOP, CORP, COEP, X-Content-Type-Options, X-Frame-Options, X-DNS-Prefetch-Control, X-Permitted-Cross-Domain-Policies, Referrer-Policy, Permissions-Policy. The kit intentionally sets both CSP `frame-ancestors 'none'` and `X-Frame-Options: DENY` — modern browsers honor `frame-ancestors`, XFO covers legacy browsers.
 - **CSP** — The Content Security Policy in `next.config.ts` is strict (`default-src 'self'`; `img-src` allows only `'self' blob:`, so `data:` URI images are blocked). When adding external resources (analytics, fonts, images, APIs), update the CSP directives accordingly or they will be blocked. `'unsafe-inline'` is required in `script-src` because Next.js App Router injects inline scripts for RSC payloads — removing it breaks hydration; `style-src` also carries `'unsafe-inline'`. Dev mode additionally includes `'unsafe-eval'`. For stricter CSP, implement nonce-based CSP via middleware (requires dynamic rendering).
-- **COEP** — `Cross-Origin-Embedder-Policy: require-corp` blocks cross-origin resources even when the CSP allows them, unless the resource is served with CORP/CORS headers. When adding external resources, updating the CSP alone is not enough — also relax COEP or ensure the resource supports `crossorigin`.
+- **COEP** — `Cross-Origin-Embedder-Policy: require-corp` is deliberately strict: it blocks **most** cross-origin resources (third-party embeds, images, iframes, scripts) even when the CSP allows them, unless the resource is served with CORP/CORS headers. This is a secure default, but it's the **first header to relax** when you legitimately need external resources — updating the CSP alone is not enough. To load a cross-origin resource, either (a) ensure it's served with the right CORP/CORS headers and request it with `crossorigin`, or (b) loosen COEP (e.g. to `credentialless`, or remove it) alongside the matching CSP change.
 - **`poweredByHeader: false`** — Next.js framework identification disabled
 - **`security.txt`** — Vulnerability reporting contact at `public/.well-known/security.txt`. Update the `Contact`, `Canonical`, and `Expires` fields per project; renew `Expires` before it lapses (RFC 9116) or reporters' tooling treats the file as stale.
-
-## Automation
-
-The kit has no push-triggered CI (local checks plus the deploy build cover that); automation exists to watch the repo while it sits idle between projects:
-
-- **Dependabot, security-only** — `.github/dependabot.yml` sets `open-pull-requests-limit: 0`, which disables version-update PRs; only security updates open PRs. Requires "Dependabot alerts" and "Dependabot security updates" enabled in the GitHub repo settings (`gh api -X PUT repos/<owner>/<repo>/vulnerability-alerts` and `.../automated-security-fixes`) — the yml alone does nothing without them.
-- **Weekly audit** — `.github/workflows/audit.yml` runs `npm audit` Mondays 06:00 UTC (and via manual dispatch). It fails on advisories of _any_ severity, matching the kit's practice of fixing even moderate ones, and catches transitive advisories that Dependabot can't cleanly PR (the `overrides` cases). It runs against the lockfile only — no `npm ci`, so install scripts never run in CI.
 
 ## Environment Variables
 
@@ -73,7 +66,8 @@ VS Code workspace config in `.vscode/`: recommended extensions (ESLint, Prettier
   - `postcss@^8.5.18` — fixes path traversal in source-map auto-loading leading to arbitrary `.map` file disclosure (GHSA-r28c-9q8g-f849, fixed in 8.5.18; earlier floor 8.5.10 covered a prior CVE) in postcss pulled in by both Next.js and `@tailwindcss/postcss`. Keep until both upstreams ship 8.5.18+.
   - `sharp@^0.35.3` — fixes inherited libvips CVEs (GHSA-f88m-g3jw-g9cj); Next 16 declares `^0.34.5` as an optional dep. A 0.x minor jump over Next's declared range — if `next/image` optimization misbehaves, suspect this first. Keep until Next bumps its sharp range.
 - **`allowScripts`** — `package.json` records reviewed install scripts per npm's `approve-scripts` feature: `sharp` (prebuilt-binary check) and `unrs-resolver` (napi postinstall check), both pinned to the installed version. When either package's version changes, `npm install` warns again — review and re-run `npm approve-scripts <pkg>` to update the pin.
-- **`engines`** — Kit declares `node >=22.0.0` (Node 22 LTS). `@types/node` is pinned to `^22` to match.
+- **`engines`** — Kit pins `node` to `24.x` (Node 24 LTS) via an exact major so local and Vercel builds resolve to the same Node version (an open range like `>=22` lets Vercel drift to whatever major it currently defaults to). `.nvmrc` (`24`) mirrors this for local `nvm use`. `@types/node` is pinned to `^24` to match the runtime.
+- **Dependency freshness** — The kit does not chase minor/patch bumps; direct deps sit at whatever the committed lockfile resolved, and `npm outdated` will usually show newer in-range versions available (e.g. React, Tailwind, ESLint, Prettier patches). This is intentional — the lockfile is the source of truth so local and Vercel install identically, and there is no automation refreshing it. Run `npm update` when you want to pull in-range updates (safe), then re-run the quality gates and commit the refreshed lockfile. Avoid blind major-version jumps (ESLint 10, TypeScript 7, `@types/node` 26+) — those need a deliberate upgrade pass.
 
 ## Project Setup Checklist
 
@@ -89,4 +83,3 @@ When cloning this kit for a new project, update the following:
 8. **Security** — Update `security.txt` contact, expiry, and `Canonical:` URL; adjust CSP in `next.config.ts` if needed; remove `X-Robots-Tag` header, `robots.txt` disallow, and `robots` metadata when ready to launch
 9. **Environment** — Copy `.env.example` to `.env.local` and fill in values if needed
 10. **`.gitkeep` files** — Remove from any folder once it has actual content
-11. **Dependabot** — Enable "Dependabot alerts" and "Dependabot security updates" on the new GitHub repo (see Automation section); the checked-in `dependabot.yml` and audit workflow do the rest
